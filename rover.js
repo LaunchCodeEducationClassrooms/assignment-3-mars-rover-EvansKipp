@@ -8,14 +8,14 @@ class Rover {
 receiveMessage(message) {
   let resultsArray = [];
 
-for (let i=0;i<commands.length;i++){
+for (let i=0; i<message.commands.length; i++){
   if (message.commands[i].commandType==="MOVE"){
     resultsArray.push({completed: true, position: message.commands[i].value});
     this.position = this.position + message.commands[i].value;
   }
 
 if (message.commands[i].commandType === "STATUS_CHECK") {
-        resultsArray.push({completed: true,mode: this.mode, generatorWatts: this.generatorWatts, position: this.position});
+        resultsArray.push({completed: true,roverStatus:{mode: this.mode, generatorWatts: this.generatorWatts, position: this.position}});
       }
 
 
@@ -31,12 +31,13 @@ if (message.commands[i].commandType === "STATUS_CHECK") {
     };
 };
 };
-let commands = [("MOVE"),('MODE_CHANGE', 'LOW_POWER'), ('STATUS_CHECK')];
+let commands = [('MODE_CHANGE','LOW_POWER' ),("MOVE"), ('STATUS_CHECK')];
 let message = ('Test message with two commands', commands);
 let rover = new Rover(98382);    // Passes 98382 as the rover's position.
 let response = rover.receiveMessage(message);
 
 console.log(response);
+
 
 
 module.exports = Rover;

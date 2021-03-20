@@ -8,8 +8,8 @@ class Message {
   this.commands=commands;
   }
 }
-let commands = [('STATUS_CHECK'),('MOVE'),("MODE_CHANGE")];
-let message = new Message('Another message!', commands);
+let commands = [("MODE_CHANGE"),('MOVE'),('STATUS_CHECK')];
+let message = new Message('Test message with two commands', commands);
 
 console.log(commands);
 console.log(message);
