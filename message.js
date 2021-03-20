@@ -8,7 +8,7 @@ class Message {
   this.commands=commands;
   }
 }
-let commands = [('STATUS_CHECK'), ('MOVE', 20),("MODE_CHANGE")];
+let commands = [('STATUS_CHECK'),('MOVE'),("MODE_CHANGE")];
 let message = new Message('Another message!', commands);
 
 console.log(commands);

@@ -4,40 +4,43 @@ class Rover {
     this.mode = 'NORMAL',
     this.generatorWatts = generatorWatts
   }
-  receiveMessage(message) {
-    let outputArray = [];
-    for (let n = 0; n < message.commands.length; n++) {
-      if (message.commands[n].commandType === "MOVE") {
-        if (this.mode === 'LOW_POWER') {
-          outputArray.push({completed: false, position: this.position})
-        }
-        else {outputArray.push({completed: true, position: message.commands[n].value});
-        this.position = this.position + message.commands[n].value;
-        }
+
+receiveMessage(message) {
+  let resultsArray = [];
+
+for (let i=0;i<commands.length;i++){
+  if (message.commands[i].commandType==="MOVE"){
+    resultsArray.push({completed: true, position: message.commands[i].value});
+    this.position = this.position + message.commands[i].value;
+  }
+
+if (message.commands[i].commandType === "STATUS_CHECK") {
+        resultsArray.push({completed: true,mode: this.mode, generatorWatts: this.generatorWatts, position: this.position});
       }
-      else if (message.commands[n].commandType === "STATUS_CHECK") {
-        outputArray.push({completed: true, mode: this.mode, generatorWatts: this.generatorWatts, position: this.position});
+
+
+  if (message.commands[i].commandType === "MODE_CHANGE") {
+        resultsArray.push({completed: true});
+        this.mode = message.commands[i].value;
       }
-      else if (message.commands[n].commandType === "MODE_CHANGE") {
-        outputArray.push({completed: true});
-        this.mode = message.commands[n].value;
-      }
-      else {
-        outputArray.push({completed: false});
-        message.name = message.name + " is an Unknown Command"
-      }
-    }
+  }
     
     return {
-      roverMessage: message.name,
-      results: outputArray
+      roverMessage:message.name,
+      results: resultsArray
     };
-  };
-
 };
+};
+let commands = [("MOVE"),('MODE_CHANGE', 'LOW_POWER'), ('STATUS_CHECK')];
+let message = ('Test message with two commands', commands);
+let rover = new Rover(98382);    // Passes 98382 as the rover's position.
+let response = rover.receiveMessage(message);
+
+console.log(response);
 
 
 module.exports = Rover;
+
 
 
 

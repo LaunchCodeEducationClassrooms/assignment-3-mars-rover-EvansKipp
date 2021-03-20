@@ -7,8 +7,7 @@ const Command = require('../command.js');
 
 
 describe("Rover class", function() {
-
-  it("constructor sets position and default values for mode and generatorWatts", function() {
+it("constructor sets position and default values for mode and generatorWatts", function() {
     let roverPosition = new Rover ("Position");
     assert.strictEqual(roverPosition.position, "Position");
     assert.strictEqual(roverPosition.mode, "NORMAL");
@@ -26,7 +25,7 @@ describe("Rover class", function() {
   it("response returned by receiveMessage includes two results if two commands are sent in the message", function() {
     let commands = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('STATUS_CHECK')];
     let message = new Message('Test message with two commands', commands);
-    let rover = new Rover(98382);
+    let rover = new Rover(89456);
     let response = rover.receiveMessage(message);
     assert.strictEqual(response.results.length, 2);
   });
@@ -34,46 +33,47 @@ describe("Rover class", function() {
   it("responds correctly to status check", function () {
     let commands = [new Command('STATUS_CHECK')];
     let message = new Message('Test message with two commands', commands);
-    let rover = new Rover(98382);
+    let rover = new Rover(89456);
     let response = rover.receiveMessage(message);
-    assert.deepStrictEqual(response, {roverMessage: 'Test message with two commands', results: [{completed: true, mode: 'NORMAL', generatorWatts: 110, position: 98382}]});
+    assert.deepStrictEqual(response, {roverMessage: 'Test message with two commands', results: [{completed: true, roverStatus:{mode: "NORMAL", generatorWatts: 110, position: 89456}}]});
     assert.strictEqual(response.results[0].completed, true);
-    assert.strictEqual(response.results[0].mode, 'NORMAL');
+    assert.strictEqual(response.results[0].mode, "NORMAL");
     assert.strictEqual(response.results[0].generatorWatts, 110);
-    assert.strictEqual(response.results[0].position, 98382);
+    assert.strictEqual(response.results[0].position, 89456);
   });
 
   it("responds correctly to mode change command", function() {
     let commands = [new Command('MODE_CHANGE', 'LOW_POWER')];
     let message = new Message('Test message with two commands', commands);
-    let rover = new Rover(98382);
+    let rover = new Rover(89456);
     let response = rover.receiveMessage(message);
     assert.strictEqual(rover.mode, 'LOW_POWER');
   });
 
   it("responds with false completed value when attempting to move in LOW_POWER mode", function() {
-    let commands = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command ('MOVE', 350)];
+    let commands = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command ('MOVE', 4321)];
     let message = new Message('Test message with two commands', commands);
-    let rover = new Rover(98382);
+    let rover = new Rover(89456);
     let response = rover.receiveMessage(message);
     assert.strictEqual(response.results[1].completed, false);
   });
 
   it("responds with position for move command", function() {
-    let commands = [new Command ('MOVE', 98732)];
+    let commands = [new Command ('MOVE', 4321)];
     let message = new Message('Test message with two commands', commands);
-    let rover = new Rover(98382);
+    let rover = new Rover(89456);
     let response = rover.receiveMessage(message);
-    assert.strictEqual(response.results[0].position, 98732);
+    assert.strictEqual(response.results[0].position, 89456);
   });
 
   it("completed false and a message for an unknown command", function() {
     let commands = [new Command ('PULLBACK', 239)];
     let message = new Message('Test message with two commands', commands);
-    let rover = new Rover(98382);
+    let rover = new Rover(89456);
     let response = rover.receiveMessage(message);
     assert.strictEqual(response.results[0].completed, false);
     assert.strictEqual("Test message with two commands is an Unknown Command", response.roverMessage)
   });
+  
 
 });
